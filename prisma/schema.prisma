@@ -1,0 +1,393 @@
+// DokaGen — Prisma Schema
+// Referensi: Master prompt.MD Section 4
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── USERS ────────────────────────────────────────────────────────────────
+model User {
+  id           String    @id @default(uuid()) @db.Uuid
+  email        String    @unique @db.VarChar(255)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+  role         UserRole  @default(owner)
+  isActive     Boolean   @default(true) @map("is_active")
+  lastLoginAt  DateTime? @map("last_login_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  perusahaan         Perusahaan[]
+  notifikasi         Notifikasi[]
+  pembayaran         Pembayaran[]
+  dokumen            Dokumen[]    @relation("DokumenDibuatOleh")
+  auditLog           AuditLog[]
+  fcmTokens          FcmToken[]
+  notifikasiSetting  NotifikasiSetting?
+
+  @@map("users")
+}
+
+enum UserRole {
+  owner
+  admin
+  staff
+}
+
+// ─── PERUSAHAAN ───────────────────────────────────────────────────────────
+model Perusahaan {
+  id                  String   @id @default(uuid()) @db.Uuid
+  userId              String   @map("user_id") @db.Uuid
+  nama                String   @db.VarChar(255)
+  alamat              String?  @db.Text
+  kota                String?  @db.VarChar(100)
+  provinsi            String?  @db.VarChar(100)
+  kodePos             String?  @map("kode_pos") @db.VarChar(10)
+  npwp                String?  @db.VarChar(30)
+  noTelp              String?  @map("no_telp") @db.VarChar(20)
+  email               String?  @db.VarChar(255)
+  website             String?  @db.VarChar(255)
+  logoUrl             String?  @map("logo_url") @db.Text
+  // Kode dokumen (muncul di nomor: INV-0005/KODE/IV/2026)
+  kodeDokumen         String?  @map("kode_dokumen") @db.VarChar(15)
+  // Pengaturan dokumen
+  matauang            String   @default("IDR") @map("mata_uang") @db.VarChar(10)
+  formatTanggal       String   @default("DD/MM/YYYY") @map("format_tanggal") @db.VarChar(20)
+  temaInvoice         TemaInvoice @default(professional) @map("tema_invoice")
+  prefixInvoice       String   @default("INV") @map("prefix_invoice") @db.VarChar(10)
+  prefixSph           String   @default("SPH") @map("prefix_sph") @db.VarChar(10)
+  prefixSuratHutang   String   @default("SH") @map("prefix_surat_hutang") @db.VarChar(10)
+  prefixKasbon        String   @default("SDP") @map("prefix_kasbon") @db.VarChar(10)
+  counterInvoice      Int      @default(1) @map("counter_invoice")
+  counterSph          Int      @default(1) @map("counter_sph")
+  counterSuratHutang  Int      @default(1) @map("counter_surat_hutang")
+  counterKasbon       Int      @default(1) @map("counter_kasbon")
+  // Pajak
+  pajakDefaultPersen  Decimal  @default(11.00) @map("pajak_default_persen") @db.Decimal(5, 2)
+  // Rekening bank
+  namaBank            String?  @map("nama_bank") @db.VarChar(100)
+  noRekening          String?  @map("no_rekening") @db.VarChar(50)
+  atasNama            String?  @map("atas_nama") @db.VarChar(255)
+  cabangBank          String?  @map("cabang_bank") @db.VarChar(100)
+  // Penanda tangan (muncul di area TTD dokumen)
+  namaDirektur        String?  @map("nama_direktur") @db.VarChar(255)
+  jabatanDirektur     String?  @map("jabatan_direktur") @db.VarChar(100)
+  // Tanda tangan
+  ttdUrl              String?  @map("ttd_url") @db.Text
+  stempelUrl          String?  @map("stempel_url") @db.Text
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  klien       Klien[]
+  dokumen     Dokumen[]
+  templatePdf TemplatePdf[]
+  scanHasil   ScanHasil[]
+
+  @@map("perusahaan")
+}
+
+enum TemaInvoice {
+  minimal
+  professional
+  modern
+}
+
+// ─── KLIEN ────────────────────────────────────────────────────────────────
+model Klien {
+  id            String    @id @default(uuid()) @db.Uuid
+  perusahaanId  String    @map("perusahaan_id") @db.Uuid
+  tipe          TipeKlien @default(perusahaan)
+  nama          String    @db.VarChar(255)
+  alamat        String?   @db.Text
+  kota          String?   @db.VarChar(100)
+  provinsi      String?   @db.VarChar(100)
+  kodePos       String?   @map("kode_pos") @db.VarChar(10)
+  npwp          String?   @db.VarChar(30)
+  noTelp        String?   @map("no_telp") @db.VarChar(20)
+  email         String?   @db.VarChar(255)
+  contactPerson String?   @map("contact_person") @db.VarChar(255)
+  catatan       String?   @db.Text
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  perusahaan  Perusahaan @relation(fields: [perusahaanId], references: [id], onDelete: Cascade)
+  dokumen     Dokumen[]
+
+  @@index([perusahaanId], name: "idx_klien_perusahaan")
+  @@map("klien")
+}
+
+enum TipeKlien {
+  perusahaan
+  personal
+}
+
+// ─── DOKUMEN ──────────────────────────────────────────────────────────────
+model Dokumen {
+  id              String         @id @default(uuid()) @db.Uuid
+  perusahaanId    String         @map("perusahaan_id") @db.Uuid
+  klienId         String?        @map("klien_id") @db.Uuid
+  tipe            TipeDokumen
+  nomor           String         @db.VarChar(50)
+  status          StatusDokumen  @default(draft)
+  judul           String?        @db.VarChar(255)
+  // Snapshot data klien saat generate
+  klienNama       String?        @map("klien_nama") @db.VarChar(255)
+  klienAlamat     String?        @map("klien_alamat") @db.Text
+  klienNpwp       String?        @map("klien_npwp") @db.VarChar(30)
+  klienEmail      String?        @map("klien_email") @db.VarChar(255)
+  klienNoTelp     String?        @map("klien_no_telp") @db.VarChar(20)
+  // Tanggal
+  tanggalDokumen  DateTime       @default(now()) @map("tanggal_dokumen") @db.Date
+  tanggalJatuhTempo DateTime?    @map("tanggal_jatuh_tempo") @db.Date
+  tanggalTerkirim DateTime?      @map("tanggal_terkirim")
+  tanggalLunas    DateTime?      @map("tanggal_lunas")
+  // Finansial
+  subtotal        Decimal        @default(0) @db.Decimal(15, 2)
+  diskonPersen    Decimal        @default(0) @map("diskon_persen") @db.Decimal(5, 2)
+  diskonNominal   Decimal        @default(0) @map("diskon_nominal") @db.Decimal(15, 2)
+  pajakPersen     Decimal        @default(0) @map("pajak_persen") @db.Decimal(5, 2)
+  pajakNominal    Decimal        @default(0) @map("pajak_nominal") @db.Decimal(15, 2)
+  total           Decimal        @default(0) @db.Decimal(15, 2)
+  // Untuk surat hutang
+  nominalHutang   Decimal?       @map("nominal_hutang") @db.Decimal(15, 2)
+  cicilanPerBulan Decimal?       @map("cicilan_per_bulan") @db.Decimal(15, 2)
+  // File & meta
+  pdfUrl          String?        @map("pdf_url") @db.Text
+  catatan         String?        @db.Text
+  syaratKetentuan String?        @map("syarat_ketentuan") @db.Text
+  tema            TemaInvoice    @default(professional)
+  dibuatOleh      String?        @map("dibuat_oleh") @db.Uuid
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  perusahaan  Perusahaan         @relation(fields: [perusahaanId], references: [id], onDelete: Cascade)
+  klien       Klien?             @relation(fields: [klienId], references: [id], onDelete: SetNull)
+  pembuat     User?              @relation("DokumenDibuatOleh", fields: [dibuatOleh], references: [id])
+  items       DokumenItem[]
+  lampiran    DokumenLampiran[]
+  pembayaran  Pembayaran[]
+  notifikasi  Notifikasi[]
+
+  @@unique([perusahaanId, nomor])
+  @@index([perusahaanId], name: "idx_dokumen_perusahaan")
+  @@index([klienId], name: "idx_dokumen_klien")
+  @@index([tipe, status], name: "idx_dokumen_tipe_status")
+  @@index([tanggalJatuhTempo], name: "idx_dokumen_jatuh_tempo")
+  @@map("dokumen")
+}
+
+enum TipeDokumen {
+  invoice
+  sph
+  surat_hutang
+  kasbon
+}
+
+enum StatusDokumen {
+  draft
+  terkirim
+  lunas
+  dibatalkan
+  diterima
+  ditolak
+  kadaluarsa
+  aktif
+  jatuh_tempo
+}
+
+// ─── DOKUMEN ITEM ─────────────────────────────────────────────────────────
+model DokumenItem {
+  id           String  @id @default(uuid()) @db.Uuid
+  dokumenId    String  @map("dokumen_id") @db.Uuid
+  urutan       Int     @default(1)
+  nama         String  @db.VarChar(255)
+  deskripsi    String? @db.Text
+  satuan       String  @default("pcs") @db.VarChar(50)
+  qty          Decimal @default(1) @db.Decimal(10, 3)
+  hargaSatuan  Decimal @default(0) @map("harga_satuan") @db.Decimal(15, 2)
+  diskonPersen Decimal @default(0) @map("diskon_persen") @db.Decimal(5, 2)
+  subtotal     Decimal @default(0) @db.Decimal(15, 2)
+
+  dokumen Dokumen @relation(fields: [dokumenId], references: [id], onDelete: Cascade)
+
+  @@index([dokumenId], name: "idx_dokumen_item_dokumen")
+  @@map("dokumen_item")
+}
+
+// ─── DOKUMEN LAMPIRAN ─────────────────────────────────────────────────────
+model DokumenLampiran {
+  id        String          @id @default(uuid()) @db.Uuid
+  dokumenId String          @map("dokumen_id") @db.Uuid
+  tipe      TipeLampiran    @default(foto)
+  namaFile  String?         @map("nama_file") @db.VarChar(255)
+  url       String          @db.Text
+  ukuranKb  Int?            @map("ukuran_kb")
+  createdAt DateTime        @default(now()) @map("created_at")
+
+  dokumen Dokumen @relation(fields: [dokumenId], references: [id], onDelete: Cascade)
+
+  @@map("dokumen_lampiran")
+}
+
+enum TipeLampiran {
+  foto
+  scan
+  pdf_pendukung
+}
+
+// ─── PEMBAYARAN ───────────────────────────────────────────────────────────
+model Pembayaran {
+  id           String          @id @default(uuid()) @db.Uuid
+  dokumenId    String          @map("dokumen_id") @db.Uuid
+  tanggal      DateTime        @db.Date
+  jumlah       Decimal         @db.Decimal(15, 2)
+  metode       MetodePembayaran?
+  noReferensi  String?         @map("no_referensi") @db.VarChar(100)
+  buktiUrl     String?         @map("bukti_url") @db.Text
+  catatan      String?         @db.Text
+  dibuatOleh   String?         @map("dibuat_oleh") @db.Uuid
+  createdAt    DateTime        @default(now()) @map("created_at")
+
+  dokumen  Dokumen @relation(fields: [dokumenId], references: [id], onDelete: Cascade)
+  pembuat  User?   @relation(fields: [dibuatOleh], references: [id])
+
+  @@index([dokumenId], name: "idx_pembayaran_dokumen")
+  @@map("pembayaran")
+}
+
+enum MetodePembayaran {
+  transfer
+  tunai
+  cek
+  giro
+  qris
+}
+
+// ─── NOTIFIKASI ───────────────────────────────────────────────────────────
+model Notifikasi {
+  id         String          @id @default(uuid()) @db.Uuid
+  userId     String          @map("user_id") @db.Uuid
+  dokumenId  String?         @map("dokumen_id") @db.Uuid
+  tipe       TipeNotifikasi
+  judul      String          @db.VarChar(255)
+  pesan      String          @db.Text
+  isRead     Boolean         @default(false) @map("is_read")
+  sentAt     DateTime?       @map("sent_at")
+  readAt     DateTime?       @map("read_at")
+  createdAt  DateTime        @default(now()) @map("created_at")
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dokumen  Dokumen? @relation(fields: [dokumenId], references: [id], onDelete: SetNull)
+
+  @@index([userId, isRead], name: "idx_notifikasi_user")
+  @@map("notifikasi")
+}
+
+enum TipeNotifikasi {
+  jatuh_tempo
+  pembayaran_diterima
+  dokumen_dikirim
+  pengingat
+  dokumen_baru
+}
+
+// ─── SCAN HASIL ──────────────────────────────────────────────────────────────
+model ScanHasil {
+  id            String   @id @default(uuid()) @db.Uuid
+  perusahaanId  String   @map("perusahaan_id") @db.Uuid
+  namaFile      String   @db.VarChar(255)
+  jumlahHalaman Int      @default(1) @map("jumlah_halaman")
+  ukuranKb      Int?     @map("ukuran_kb")
+  kualitas      String   @default("standar") @db.VarChar(20)
+  ukuranKertas  String   @default("A4") @map("ukuran_kertas") @db.VarChar(10)
+  pdfUrl        String?  @map("pdf_url") @db.Text
+  dibuatOleh    String?  @map("dibuat_oleh") @db.Uuid
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  perusahaan Perusahaan @relation(fields: [perusahaanId], references: [id], onDelete: Cascade)
+
+  @@index([perusahaanId], name: "idx_scan_perusahaan")
+  @@map("scan_hasil")
+}
+
+// ─── FCM TOKENS ───────────────────────────────────────────────────────────────
+model FcmToken {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  token       String   @unique @db.Text
+  deviceInfo  String?  @map("device_info") @db.VarChar(255)
+  isActive    Boolean  @default(true) @map("is_active")
+  lastUsedAt  DateTime @default(now()) @map("last_used_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isActive], name: "idx_fcm_user")
+  @@map("fcm_tokens")
+}
+
+// ─── NOTIFIKASI SETTING ───────────────────────────────────────────────────────
+model NotifikasiSetting {
+  id                    String   @id @default(uuid()) @db.Uuid
+  userId                String   @unique @map("user_id") @db.Uuid
+  pushAktif             Boolean  @default(true)  @map("push_aktif")
+  emailAktif            Boolean  @default(false) @map("email_aktif")
+  inappAktif            Boolean  @default(true)  @map("inapp_aktif")
+  pengingatH7           Boolean  @default(true)  @map("pengingat_h7")
+  pengingatH3           Boolean  @default(true)  @map("pengingat_h3")
+  pengingatH1           Boolean  @default(true)  @map("pengingat_h1")
+  pengingatH0           Boolean  @default(true)  @map("pengingat_h0")
+  notifDokumenTerkirim  Boolean  @default(true)  @map("notif_dokumen_terkirim")
+  notifPembayaran       Boolean  @default(true)  @map("notif_pembayaran")
+  notifDokumenBaru      Boolean  @default(true)  @map("notif_dokumen_baru")
+  jamPengiriman         String   @default("08:00") @map("jam_pengiriman") @db.VarChar(5)
+  updatedAt             DateTime @default(now()) @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifikasi_setting")
+}
+
+// ─── TEMPLATE PDF ─────────────────────────────────────────────────────────
+model TemplatePdf {
+  id            String      @id @default(uuid()) @db.Uuid
+  perusahaanId  String?     @map("perusahaan_id") @db.Uuid
+  nama          String      @db.VarChar(100)
+  tipeDokumen   TipeDokumen @map("tipe_dokumen")
+  tema          TemaInvoice
+  htmlTemplate  String      @map("html_template") @db.Text
+  isDefault     Boolean     @default(false) @map("is_default")
+  isAktif       Boolean     @default(true) @map("is_aktif")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  perusahaan Perusahaan? @relation(fields: [perusahaanId], references: [id], onDelete: Cascade)
+
+  @@map("template_pdf")
+}
+
+// ─── AUDIT LOG ────────────────────────────────────────────────────────────
+model AuditLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @map("user_id") @db.Uuid
+  aksi      String   @db.VarChar(100)
+  tabel     String?  @db.VarChar(50)
+  recordId  String?  @map("record_id") @db.Uuid
+  dataLama  Json?    @map("data_lama")
+  dataBaru  Json?    @map("data_baru")
+  ipAddress String?  @map("ip_address") @db.VarChar(45)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId], name: "idx_audit_log_user")
+  @@index([tabel, recordId], name: "idx_audit_log_record")
+  @@map("audit_log")
+}

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #1A1A2E; background: #fff; }
+  .page { padding: 0; }
+
+  /* Header */
+  .header { background: #1A3C6E; color: white; padding: 28px 32px; display: flex; justify-content: space-between; align-items: flex-start; }
+  .header-left h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.5px; }
+  .header-left p { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+  .header-logo { height: 44px; max-width: 110px; object-fit: contain; display: block; margin-bottom: 6px; }
+  .header-right { text-align: right; }
+  .header-right .invoice-label { font-size: 11px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+  .header-right .invoice-number { font-size: 18px; font-weight: 700; margin-top: 2px; }
+  .header-right .invoice-date { font-size: 11px; opacity: 0.8; margin-top: 4px; }
+
+  /* Body */
+  .body { padding: 28px 32px; }
+
+  /* Info boxes */
+  .info-row { display: flex; gap: 20px; margin-bottom: 24px; }
+  .info-box { flex: 1; }
+  .info-box .label { font-size: 10px; font-weight: 600; color: #9898A8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .info-box .value { font-size: 13px; font-weight: 600; color: #1A1A2E; }
+  .info-box .sub { font-size: 11px; color: #9898A8; margin-top: 2px; line-height: 1.5; }
+
+  /* Status badge */
+  .status-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 600; }
+  .status-draft { background: #FAEEDA; color: #633806; }
+  .status-terkirim { background: #E6F1FB; color: #0C447C; }
+  .status-lunas { background: #E1F5EE; color: #085041; }
+
+  /* Due date highlight */
+  .due-box { background: #FFF8EC; border-left: 3px solid #F5A623; padding: 10px 14px; border-radius: 0 8px 8px 0; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .due-box .due-label { font-size: 11px; color: #633806; }
+  .due-box .due-date { font-size: 13px; font-weight: 700; color: #633806; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  thead tr { background: #F4F4F8; }
+  th { padding: 10px 12px; font-size: 10px; font-weight: 600; color: #9898A8; text-transform: uppercase; letter-spacing: 0.6px; text-align: left; border-bottom: 1px solid #E8E8EE; }
+  td { padding: 10px 12px; font-size: 11.5px; border-bottom: 1px solid #F4F4F8; vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 2px solid #E8E8EE; }
+  .text-right { text-align: right; }
+  .text-center { text-align: center; }
+  .font-medium { font-weight: 600; }
+  .text-secondary { color: #9898A8; }
+  .text-xs { font-size: 10px; }
+
+  /* Totals */
+  .totals { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .totals-table { width: 260px; }
+  .totals-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 12px; }
+  .totals-row.total { border-top: 2px solid #1A3C6E; margin-top: 6px; padding-top: 10px; font-size: 15px; font-weight: 700; color: #1A3C6E; }
+  .totals-label { color: #9898A8; }
+
+  /* Payment info */
+  .payment-box { background: #EEF3FB; border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; }
+  .payment-title { font-size: 11px; font-weight: 600; color: #1A3C6E; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; }
+  .payment-detail { display: flex; gap: 40px; }
+  .payment-item .plabel { font-size: 10px; color: #9898A8; }
+  .payment-item .pvalue { font-size: 13px; font-weight: 700; color: #1A3C6E; margin-top: 2px; }
+
+  /* Notes */
+  .notes-box { background: #F4F4F8; border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
+  .notes-title { font-size: 10px; font-weight: 600; color: #9898A8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+  .notes-text { font-size: 11px; color: #1A1A2E; line-height: 1.6; white-space: pre-wrap; }
+
+  /* Footer */
+  .footer { background: #F4F4F8; padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+  .footer-left { font-size: 10px; color: #9898A8; }
+  .footer-right { font-size: 10px; color: #9898A8; }
+</style>
+</head>
+<body>
+<div class="page">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      {{LOGO_IMG}}
+      <h1>{{PERUSAHAAN_NAMA}}</h1>
+      <p>{{PERUSAHAAN_ALAMAT}}, {{PERUSAHAAN_KOTA}}</p>
+      <p>{{PERUSAHAAN_TELP}} &nbsp;·&nbsp; {{PERUSAHAAN_EMAIL}}</p>
+      <p style="margin-top:4px;font-size:10px;opacity:0.6">NPWP: {{PERUSAHAAN_NPWP}}</p>
+    </div>
+    <div class="header-right">
+      <div class="invoice-label">Invoice</div>
+      <div class="invoice-number">{{NOMOR}}</div>
+      <div class="invoice-date">{{TANGGAL}}</div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+    <!-- Bill to + Due -->
+    <div class="info-row">
+      <div class="info-box">
+        <div class="label">Tagihan Kepada</div>
+        <div class="value">{{KLIEN_NAMA}}</div>
+        <div class="sub">{{KLIEN_ALAMAT}}</div>
+        <div class="sub">{{KLIEN_TELP}} &nbsp;·&nbsp; {{KLIEN_EMAIL}}</div>
+        <div class="sub" style="margin-top:4px">NPWP: {{KLIEN_NPWP}}</div>
+      </div>
+      <div class="info-box" style="max-width:200px">
+        <div class="label">Jatuh Tempo</div>
+        <div class="value" style="color:#E24B4A">{{JATUH_TEMPO}}</div>
+      </div>
+    </div>
+
+    <!-- Items table -->
+    <table>
+      <thead>
+        <tr>
+          <th style="width:32px">#</th>
+          <th>Deskripsi</th>
+          <th class="text-center" style="width:90px">Qty</th>
+          <th class="text-right" style="width:120px">Harga Satuan</th>
+          <th class="text-center" style="width:60px">Diskon</th>
+          <th class="text-right" style="width:130px">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ITEM_ROWS}}
+      </tbody>
+    </table>
+
+    <!-- Totals -->
+    <div class="totals">
+      <div class="totals-table">
+        <div class="totals-row"><span class="totals-label">Subtotal</span><span>{{SUBTOTAL}}</span></div>
+        <div class="totals-row"><span class="totals-label">Diskon ({{DISKON_PERSEN}}%)</span><span>- {{DISKON_NOMINAL}}</span></div>
+        <div class="totals-row"><span class="totals-label">PPN ({{PAJAK_PERSEN}}%)</span><span>{{PAJAK_NOMINAL}}</span></div>
+        <div class="totals-row total"><span>TOTAL</span><span>{{TOTAL}}</span></div>
+      </div>
+    </div>
+
+    <!-- Payment info -->
+    <div class="payment-box">
+      <div class="payment-title">Informasi Pembayaran</div>
+      <div class="payment-detail">
+        <div class="payment-item"><div class="plabel">Bank</div><div class="pvalue">{{BANK_NAMA}}</div></div>
+        <div class="payment-item"><div class="plabel">No. Rekening</div><div class="pvalue">{{BANK_REKENING}}</div></div>
+        <div class="payment-item"><div class="plabel">Atas Nama</div><div class="pvalue">{{BANK_ATAS_NAMA}}</div></div>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="notes-box" style="display:{{CATATAN}} ? 'block' : 'none'">
+      <div class="notes-title">Catatan</div>
+      <div class="notes-text">{{CATATAN}}</div>
+    </div>
+
+    <!-- Signature -->
+    <div style="display:flex;justify-content:flex-end;margin-top:28px;">
+      <div style="text-align:center;min-width:200px;">
+        <div style="font-size:10px;font-weight:600;color:#9898A8;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Hormat Kami,</div>
+        <div style="position:relative;height:90px;display:flex;align-items:center;justify-content:center;">
+          {{TTD_IMG}}
+          {{STEMPEL_IMG}}
+        </div>
+        <div style="border-top:1px solid #1A1A2E;margin-top:6px;padding-top:6px;font-size:11px;font-weight:600;color:#1A1A2E;">{{NAMA_DIREKTUR}}</div>
+        <div style="font-size:10px;color:#9898A8;margin-top:2px;">{{JABATAN_DIREKTUR}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-left">{{NOMOR}} &nbsp;·&nbsp; Dibuat dengan DokaGen</div>
+    <div class="footer-right">{{TANGGAL}}</div>
+  </div>
+</div>
+</body>
+</html>
