@@ -13,6 +13,7 @@ import dokumenRoutes from './modules/dokumen/dokumen.routes';
 import laporanRoutes from './modules/laporan/laporan.routes';
 import notifikasiRoutes from './modules/notifikasi/notifikasi.routes';
 import scanRoutes from './modules/scan/scan.routes';
+import usersRoutes from './modules/users/users.routes';
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/dokumen', dokumenRoutes);
 app.use('/api/laporan', laporanRoutes);
 app.use('/api/notifikasi', notifikasiRoutes);
 app.use('/api/scan', scanRoutes);
+app.use('/api/users', usersRoutes);
 
 // File statis: PDF hasil scan bisa diakses via /uploads/scan/...
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));

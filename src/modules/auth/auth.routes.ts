@@ -10,7 +10,8 @@ import * as authController from './auth.controller';
 
 const router = Router();
 
-router.post('/register', validate(RegisterSchema), authController.register);
+// Registrasi publik dinonaktifkan — akun dibuat dari Settings oleh owner/admin
+// router.post('/register', validate(RegisterSchema), authController.register);
 router.post('/login', validate(LoginSchema), authController.login);
 router.post('/refresh', validate(RefreshTokenSchema), authController.refresh);
 router.post('/logout', authController.logout);

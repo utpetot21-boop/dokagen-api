@@ -74,7 +74,8 @@ export async function login(input: LoginInput) {
     data: { lastLoginAt: new Date() },
   });
 
-  const perusahaanId = user.perusahaan[0]?.id;
+  // Owner: perusahaan diambil dari relasi; sub-user: dari field perusahaanId langsung
+  const perusahaanId = user.perusahaan[0]?.id ?? user.perusahaanId ?? undefined;
   const tokenPayload = {
     userId: user.id,
     email: user.email,
