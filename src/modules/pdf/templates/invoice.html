@@ -4,109 +4,133 @@
 <meta charset="UTF-8"/>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #1A1A2E; background: #fff; }
-  .page { padding: 0; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; color: #1A1A2E; background: #fff; }
+
+  /* Top accent stripe */
+  .top-stripe { height: 4px; background: #1A3C6E; }
 
   /* Header */
-  .header { background: #1A3C6E; color: white; padding: 28px 32px; display: flex; justify-content: space-between; align-items: flex-start; }
-  .header-left h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.5px; }
-  .header-left p { font-size: 11px; opacity: 0.8; margin-top: 2px; }
-  .header-logo { height: 44px; max-width: 110px; object-fit: contain; display: block; margin-bottom: 6px; }
+  .header { padding: 24px 32px 16px; display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #D1D5DB; }
+  .header-left .company-name { font-size: 16px; font-weight: 700; color: #1A3C6E; margin-bottom: 3px; }
+  .header-left .company-info { font-size: 10px; color: #6B7280; line-height: 1.7; }
   .header-right { text-align: right; }
-  .header-right .invoice-label { font-size: 11px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
-  .header-right .invoice-number { font-size: 18px; font-weight: 700; margin-top: 2px; }
-  .header-right .invoice-date { font-size: 11px; opacity: 0.8; margin-top: 4px; }
+  .header-right .doc-type { font-size: 28px; font-weight: 800; color: #1A3C6E; letter-spacing: 2px; line-height: 1; }
+  .header-right .doc-number { font-size: 11px; font-weight: 600; color: #374151; margin-top: 6px; }
+  .header-right .doc-date { font-size: 10px; color: #6B7280; margin-top: 2px; }
 
   /* Body */
-  .body { padding: 28px 32px; }
+  .body { padding: 20px 32px; }
 
-  /* Info boxes */
-  .info-row { display: flex; gap: 20px; margin-bottom: 24px; }
+  /* Info row */
+  .info-row { display: flex; gap: 24px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #E5E7EB; }
   .info-box { flex: 1; }
-  .info-box .label { font-size: 10px; font-weight: 600; color: #9898A8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-  .info-box .value { font-size: 13px; font-weight: 600; color: #1A1A2E; }
-  .info-box .sub { font-size: 11px; color: #9898A8; margin-top: 2px; line-height: 1.5; }
+  .info-box .label { font-size: 9px; font-weight: 700; color: #9CA3AF; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .info-box .value { font-size: 13px; font-weight: 700; color: #111827; }
+  .info-box .sub { font-size: 10px; color: #6B7280; margin-top: 2px; line-height: 1.6; }
 
-  /* Status badge */
-  .status-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 600; }
-  .status-draft { background: #FAEEDA; color: #633806; }
-  .status-terkirim { background: #E6F1FB; color: #0C447C; }
-  .status-lunas { background: #E1F5EE; color: #085041; }
-
-  /* Due date highlight */
-  .due-box { background: #FFF8EC; border-left: 3px solid #F5A623; padding: 10px 14px; border-radius: 0 8px 8px 0; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-  .due-box .due-label { font-size: 11px; color: #633806; }
-  .due-box .due-date { font-size: 13px; font-weight: 700; color: #633806; }
+  /* Detail grid */
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .detail-row { display: flex; justify-content: space-between; font-size: 10px; }
+  .detail-row .dlabel { color: #9CA3AF; }
+  .detail-row .dvalue { font-weight: 600; color: #374151; }
+  .detail-row .dvalue.due { color: #DC2626; }
 
   /* Table */
-  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-  thead tr { background: #F4F4F8; }
-  th { padding: 10px 12px; font-size: 10px; font-weight: 600; color: #9898A8; text-transform: uppercase; letter-spacing: 0.6px; text-align: left; border-bottom: 1px solid #E8E8EE; }
-  td { padding: 10px 12px; font-size: 11.5px; border-bottom: 1px solid #F4F4F8; vertical-align: top; }
-  tbody tr:last-child td { border-bottom: 2px solid #E8E8EE; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  thead tr { border-bottom: 2px solid #1A3C6E; }
+  th { padding: 8px 10px; font-size: 9px; font-weight: 700; color: #1A3C6E; text-transform: uppercase; letter-spacing: 0.7px; text-align: left; }
+  td { padding: 9px 10px; font-size: 11px; border-bottom: 1px solid #F3F4F6; vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 2px solid #E5E7EB; }
   .text-right { text-align: right; }
   .text-center { text-align: center; }
   .font-medium { font-weight: 600; }
-  .text-secondary { color: #9898A8; }
-  .text-xs { font-size: 10px; }
+  .text-secondary { color: #9CA3AF; }
+  .text-xs { font-size: 9.5px; }
 
   /* Totals */
-  .totals { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .totals-wrap { display: flex; justify-content: flex-end; margin-bottom: 20px; }
   .totals-table { width: 260px; }
-  .totals-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 12px; }
-  .totals-row.total { border-top: 2px solid #1A3C6E; margin-top: 6px; padding-top: 10px; font-size: 15px; font-weight: 700; color: #1A3C6E; }
-  .totals-label { color: #9898A8; }
+  .totals-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 11px; }
+  .totals-label { color: #6B7280; }
+  .totals-divider { border-top: 1.5px solid #1A3C6E; margin: 6px 0; }
+  .totals-total { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; font-weight: 800; color: #1A3C6E; }
 
-  /* Payment info */
-  .payment-box { background: #EEF3FB; border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; }
-  .payment-title { font-size: 11px; font-weight: 600; color: #1A3C6E; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; }
-  .payment-detail { display: flex; gap: 40px; }
-  .payment-item .plabel { font-size: 10px; color: #9898A8; }
-  .payment-item .pvalue { font-size: 13px; font-weight: 700; color: #1A3C6E; margin-top: 2px; }
+  /* Terbilang */
+  .terbilang-box { border: 1px dashed #D1D5DB; border-radius: 6px; padding: 8px 12px; margin-bottom: 16px; font-size: 10px; }
+  .terbilang-label { font-size: 9px; font-weight: 700; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
+  .terbilang-text { font-style: italic; color: #374151; }
+
+  /* Payment */
+  .payment-box { border: 1px solid #D1D5DB; border-radius: 8px; padding: 14px 16px; margin-bottom: 16px; }
+  .payment-title { font-size: 9px; font-weight: 700; color: #1A3C6E; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+  .payment-detail { display: flex; gap: 32px; }
+  .payment-item .plabel { font-size: 9px; color: #9CA3AF; margin-bottom: 2px; }
+  .payment-item .pvalue { font-size: 12px; font-weight: 700; color: #111827; }
 
   /* Notes */
-  .notes-box { background: #F4F4F8; border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
-  .notes-title { font-size: 10px; font-weight: 600; color: #9898A8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
-  .notes-text { font-size: 11px; color: #1A1A2E; line-height: 1.6; white-space: pre-wrap; }
+  .notes-box { border-left: 3px solid #1A3C6E; padding: 8px 12px; margin-bottom: 16px; }
+  .notes-title { font-size: 9px; font-weight: 700; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .notes-text { font-size: 10px; color: #374151; line-height: 1.6; white-space: pre-wrap; }
+
+  /* Bottom section */
+  .bottom-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 24px; }
+
+  /* Signature */
+  .signature { text-align: center; min-width: 180px; }
+  .sig-label { font-size: 9px; font-weight: 700; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .sig-img-wrap { position: relative; height: 80px; display: flex; align-items: center; justify-content: center; }
+  .sig-name { border-top: 1px solid #374151; margin-top: 4px; padding-top: 5px; font-size: 11px; font-weight: 700; color: #111827; }
+  .sig-role { font-size: 9px; color: #6B7280; margin-top: 2px; }
 
   /* Footer */
-  .footer { background: #F4F4F8; padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
-  .footer-left { font-size: 10px; color: #9898A8; }
-  .footer-right { font-size: 10px; color: #9898A8; }
+  .footer { margin-top: 20px; padding: 12px 32px; border-top: 1px solid #D1D5DB; display: flex; justify-content: space-between; align-items: center; }
+  .footer-company { font-size: 9.5px; font-weight: 700; color: #1A3C6E; }
+  .footer-info { font-size: 9px; color: #9CA3AF; text-align: right; line-height: 1.7; }
 </style>
 </head>
 <body>
 <div class="page">
+  <!-- Top stripe -->
+  <div class="top-stripe"></div>
+
   <!-- Header -->
   <div class="header">
     <div class="header-left">
       {{LOGO_IMG}}
-      <h1>{{PERUSAHAAN_NAMA}}</h1>
-      <p>{{PERUSAHAAN_ALAMAT}}, {{PERUSAHAAN_KOTA}}</p>
-      <p>{{PERUSAHAAN_TELP}} &nbsp;·&nbsp; {{PERUSAHAAN_EMAIL}}</p>
-      <p style="margin-top:4px;font-size:10px;opacity:0.6">NPWP: {{PERUSAHAAN_NPWP}}</p>
+      <div class="company-name">{{PERUSAHAAN_NAMA}}</div>
+      <div class="company-info">
+        {{PERUSAHAAN_ALAMAT}}<br>
+        {{PERUSAHAAN_KOTA}}<br>
+        Telp: {{PERUSAHAAN_TELP}} &nbsp;·&nbsp; {{PERUSAHAAN_EMAIL}}
+      </div>
     </div>
     <div class="header-right">
-      <div class="invoice-label">Invoice</div>
-      <div class="invoice-number">{{NOMOR}}</div>
-      <div class="invoice-date">{{TANGGAL}}</div>
+      <div class="doc-type">INVOICE</div>
+      <div class="doc-number">{{NOMOR}}</div>
+      <div class="doc-date">{{TANGGAL}}</div>
     </div>
   </div>
 
   <!-- Body -->
   <div class="body">
-    <!-- Bill to + Due -->
+
+    <!-- Info row -->
     <div class="info-row">
       <div class="info-box">
         <div class="label">Tagihan Kepada</div>
         <div class="value">{{KLIEN_NAMA}}</div>
         <div class="sub">{{KLIEN_ALAMAT}}</div>
-        <div class="sub">{{KLIEN_TELP}} &nbsp;·&nbsp; {{KLIEN_EMAIL}}</div>
-        <div class="sub" style="margin-top:4px">NPWP: {{KLIEN_NPWP}}</div>
+        <div class="sub">{{KLIEN_TELP}}</div>
+        <div class="sub">{{KLIEN_EMAIL}}</div>
+        <div class="sub">NPWP: {{KLIEN_NPWP}}</div>
       </div>
-      <div class="info-box" style="max-width:200px">
-        <div class="label">Jatuh Tempo</div>
-        <div class="value" style="color:#E24B4A">{{JATUH_TEMPO}}</div>
+      <div class="info-box" style="max-width:220px">
+        <div class="label">Detail Invoice</div>
+        <div class="detail-grid">
+          <div class="detail-row"><span class="dlabel">Tanggal</span><span class="dvalue">{{TANGGAL}}</span></div>
+          <div class="detail-row"><span class="dlabel">Jatuh Tempo</span><span class="dvalue due">{{JATUH_TEMPO}}</span></div>
+          <div class="detail-row"><span class="dlabel">NPWP</span><span class="dvalue">{{PERUSAHAAN_NPWP}}</span></div>
+        </div>
       </div>
     </div>
 
@@ -114,12 +138,13 @@
     <table>
       <thead>
         <tr>
-          <th style="width:32px">#</th>
-          <th>Deskripsi</th>
-          <th class="text-center" style="width:90px">Qty</th>
-          <th class="text-right" style="width:120px">Harga Satuan</th>
-          <th class="text-center" style="width:60px">Diskon</th>
-          <th class="text-right" style="width:130px">Subtotal</th>
+          <th style="width:28px">#</th>
+          <th>Deskripsi Pekerjaan</th>
+          <th class="text-center" style="width:70px">Qty</th>
+          <th class="text-center" style="width:50px">Sat</th>
+          <th class="text-right" style="width:110px">Harga Satuan</th>
+          <th class="text-center" style="width:55px">Diskon</th>
+          <th class="text-right" style="width:110px">Jumlah</th>
         </tr>
       </thead>
       <tbody>
@@ -127,50 +152,64 @@
       </tbody>
     </table>
 
-    <!-- Totals -->
-    <div class="totals">
+    <!-- Totals + Terbilang -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:20px;">
+      <div style="flex:1; padding-right:24px;">
+        <div class="terbilang-box">
+          <div class="terbilang-label">Terbilang</div>
+          <div class="terbilang-text"><em>{{TERBILANG}}</em></div>
+        </div>
+        <div class="notes-box">
+          <div class="notes-title">Catatan</div>
+          <div class="notes-text">{{CATATAN}}</div>
+        </div>
+      </div>
       <div class="totals-table">
         <div class="totals-row"><span class="totals-label">Subtotal</span><span>{{SUBTOTAL}}</span></div>
         <div class="totals-row"><span class="totals-label">Diskon ({{DISKON_PERSEN}}%)</span><span>- {{DISKON_NOMINAL}}</span></div>
         <div class="totals-row"><span class="totals-label">PPN ({{PAJAK_PERSEN}}%)</span><span>{{PAJAK_NOMINAL}}</span></div>
-        <div class="totals-row total"><span>TOTAL</span><span>{{TOTAL}}</span></div>
+        <div class="totals-divider"></div>
+        <div class="totals-total"><span>TOTAL</span><span>{{TOTAL}}</span></div>
       </div>
     </div>
 
-    <!-- Payment info -->
-    <div class="payment-box">
-      <div class="payment-title">Informasi Pembayaran</div>
-      <div class="payment-detail">
-        <div class="payment-item"><div class="plabel">Bank</div><div class="pvalue">{{BANK_NAMA}}</div></div>
-        <div class="payment-item"><div class="plabel">No. Rekening</div><div class="pvalue">{{BANK_REKENING}}</div></div>
-        <div class="payment-item"><div class="plabel">Atas Nama</div><div class="pvalue">{{BANK_ATAS_NAMA}}</div></div>
+    <!-- Payment + Signature -->
+    <div class="bottom-section">
+      <div style="flex:1; padding-right:24px;">
+        <div class="payment-box">
+          <div class="payment-title">Informasi Pembayaran</div>
+          <div class="payment-detail">
+            <div class="payment-item"><div class="plabel">Bank</div><div class="pvalue">{{BANK_NAMA}}</div></div>
+            <div class="payment-item"><div class="plabel">No. Rekening</div><div class="pvalue">{{BANK_REKENING}}</div></div>
+            <div class="payment-item"><div class="plabel">Atas Nama</div><div class="pvalue">{{BANK_ATAS_NAMA}}</div></div>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <!-- Notes -->
-    <div class="notes-box" style="display:{{CATATAN}} ? 'block' : 'none'">
-      <div class="notes-title">Catatan</div>
-      <div class="notes-text">{{CATATAN}}</div>
-    </div>
-
-    <!-- Signature -->
-    <div style="display:flex;justify-content:flex-end;margin-top:28px;">
-      <div style="text-align:center;min-width:200px;">
-        <div style="font-size:10px;font-weight:600;color:#9898A8;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Hormat Kami,</div>
-        <div style="position:relative;height:90px;display:flex;align-items:center;justify-content:center;">
+      <div class="signature">
+        <div class="sig-label">Hormat Kami,</div>
+        <div style="font-size:10px; color:#374151; margin-bottom:4px;">{{PERUSAHAAN_NAMA}}</div>
+        <div class="sig-img-wrap">
           {{TTD_IMG}}
           {{STEMPEL_IMG}}
         </div>
-        <div style="border-top:1px solid #1A1A2E;margin-top:6px;padding-top:6px;font-size:11px;font-weight:600;color:#1A1A2E;">{{NAMA_DIREKTUR}}</div>
-        <div style="font-size:10px;color:#9898A8;margin-top:2px;">{{JABATAN_DIREKTUR}}</div>
+        <div class="sig-name">{{NAMA_DIREKTUR}}</div>
+        <div class="sig-role">{{JABATAN_DIREKTUR}}</div>
       </div>
     </div>
+
   </div>
 
   <!-- Footer -->
   <div class="footer">
-    <div class="footer-left">{{NOMOR}} &nbsp;·&nbsp; Dibuat dengan DokaGen</div>
-    <div class="footer-right">{{TANGGAL}}</div>
+    <div>
+      <div class="footer-company">{{PERUSAHAAN_NAMA}}</div>
+      <div style="font-size:9px;color:#9CA3AF;">{{PERUSAHAAN_ALAMAT}} &nbsp;·&nbsp; {{PERUSAHAAN_KOTA}}</div>
+    </div>
+    <div class="footer-info">
+      Telp: {{PERUSAHAAN_TELP}}<br>
+      Email: {{PERUSAHAAN_EMAIL}}<br>
+      NPWP: {{PERUSAHAAN_NPWP}}
+    </div>
   </div>
 </div>
 </body>

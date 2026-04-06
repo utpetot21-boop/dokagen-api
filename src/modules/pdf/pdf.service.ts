@@ -83,6 +83,26 @@ async function urlKeBase64(url: string): Promise<string | null> {
   });
 }
 
+function terbilang(amount: number | string): string {
+  const num = Math.floor(typeof amount === 'string' ? parseFloat(amount) : amount);
+  if (isNaN(num) || num === 0) return 'nol rupiah';
+  const satuan = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan',
+    'sepuluh', 'sebelas', 'dua belas', 'tiga belas', 'empat belas', 'lima belas', 'enam belas',
+    'tujuh belas', 'delapan belas', 'sembilan belas'];
+  function spell(n: number): string {
+    if (n < 20) return satuan[n];
+    if (n < 100) return satuan[Math.floor(n / 10)].replace('satu', 'se') + (Math.floor(n / 10) === 1 ? '' : '') + 'puluh' + (n % 10 ? ' ' + satuan[n % 10] : '');
+    if (n < 200) return 'seratus' + (n % 100 ? ' ' + spell(n % 100) : '');
+    if (n < 1000) return satuan[Math.floor(n / 100)] + ' ratus' + (n % 100 ? ' ' + spell(n % 100) : '');
+    if (n < 2000) return 'seribu' + (n % 1000 ? ' ' + spell(n % 1000) : '');
+    if (n < 1000000) return spell(Math.floor(n / 1000)) + ' ribu' + (n % 1000 ? ' ' + spell(n % 1000) : '');
+    if (n < 1000000000) return spell(Math.floor(n / 1000000)) + ' juta' + (n % 1000000 ? ' ' + spell(n % 1000000) : '');
+    return spell(Math.floor(n / 1000000000)) + ' miliar' + (n % 1000000000 ? ' ' + spell(n % 1000000000) : '');
+  }
+  const words = spell(num);
+  return words.charAt(0).toUpperCase() + words.slice(1) + ' rupiah';
+}
+
 function formatRupiah(amount: number | string): string {
   const num = typeof amount === 'string' ? parseFloat(amount) : amount;
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
@@ -135,6 +155,7 @@ async function buildHtml(doc: DokumenData): Promise<string> {
     '{{PAJAK_PERSEN}}': String(doc.pajakPersen),
     '{{PAJAK_NOMINAL}}': formatRupiah(doc.pajakNominal),
     '{{TOTAL}}': formatRupiah(doc.total),
+    '{{TERBILANG}}': terbilang(doc.total),
     '{{CATATAN}}': doc.catatan ?? '',
     '{{SYARAT_KETENTUAN}}': doc.syaratKetentuan ?? '',
     '{{NOMINAL_HUTANG}}': formatRupiah(doc.nominalHutang ?? 0),
