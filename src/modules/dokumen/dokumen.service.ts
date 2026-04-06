@@ -178,10 +178,26 @@ export async function update(
 }
 
 // ─── Update Status ────────────────────────────────────────────────────────
+const ALLOWED_STATUS: Record<string, string[]> = {
+  invoice:      ['terkirim', 'lunas', 'dibatalkan', 'jatuh_tempo'],
+  sph:          ['terkirim', 'diterima', 'ditolak', 'kadaluarsa'],
+  surat_hutang: ['aktif', 'lunas', 'jatuh_tempo'],
+  kasbon:       ['aktif', 'lunas', 'jatuh_tempo'],
+};
+
 export async function updateStatus(
   id: string, perusahaanId: string, input: UpdateStatusInput,
 ) {
-  await getById(id, perusahaanId);
+  const doc = await getById(id, perusahaanId);
+
+  const allowed = ALLOWED_STATUS[doc.tipe] ?? [];
+  if (!allowed.includes(input.status)) {
+    throw Object.assign(
+      new Error(`Status "${input.status}" tidak valid untuk dokumen tipe ${doc.tipe}`),
+      { statusCode: 422 },
+    );
+  }
+
   return prisma.dokumen.update({
     where: { id },
     data: {
