@@ -96,10 +96,14 @@ export async function sendBatch(
     };
 
     try {
-      const response = await admin.messaging().sendEachForMulticast(message);
+      const msgInstance = admin.messaging();
+      // Kompatibel firebase-admin v9-v10 (sendMulticast) dan v11+ (sendEachForMulticast)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const sendFn = ((msgInstance as any).sendEachForMulticast || (msgInstance as any).sendMulticast).bind(msgInstance);
+      const response = await sendFn(message) as admin.messaging.BatchResponse;
 
       // Kumpulkan token yang gagal
-      response.responses.forEach((r, idx) => {
+      response.responses.forEach((r: admin.messaging.SendResponse, idx: number) => {
         if (!r.success && r.error) {
           const code = r.error.code;
           // Token tidak valid / tidak terdaftar → hapus
