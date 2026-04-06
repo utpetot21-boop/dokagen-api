@@ -28,7 +28,7 @@ export async function uploadLogo(req: Request, res: Response, next: NextFunction
     }
     // URL dari storage — implementasi upload ke Supabase/S3 di Phase 2
     const logoUrl = (req.file as Express.Multer.File & { location?: string }).location
-      ?? `/uploads/${req.file.filename}`;
+      ?? `/uploads/images/${req.file.filename}`;
     const data = await perusahaanService.updateLogoUrl(req.user!.userId, logoUrl);
     sendSuccess(res, { logoUrl: data.logoUrl }, 'Logo berhasil diunggah');
   } catch (err) {
@@ -43,7 +43,7 @@ export async function uploadStempel(req: Request, res: Response, next: NextFunct
       return;
     }
     const stempelUrl = (req.file as Express.Multer.File & { location?: string }).location
-      ?? `/uploads/${req.file.filename}`;
+      ?? `/uploads/images/${req.file.filename}`;
     const data = await perusahaanService.updateStempelUrl(req.user!.userId, stempelUrl);
     sendSuccess(res, { stempelUrl: data.stempelUrl }, 'Stempel berhasil diunggah');
   } catch (err) {
@@ -58,7 +58,7 @@ export async function uploadTtd(req: Request, res: Response, next: NextFunction)
       return;
     }
     const ttdUrl = (req.file as Express.Multer.File & { location?: string }).location
-      ?? `/uploads/${req.file.filename}`;
+      ?? `/uploads/images/${req.file.filename}`;
     const data = await perusahaanService.updateTtdUrl(req.user!.userId, ttdUrl);
     sendSuccess(res, { ttdUrl: data.ttdUrl }, 'Tanda tangan berhasil diunggah');
   } catch (err) {
