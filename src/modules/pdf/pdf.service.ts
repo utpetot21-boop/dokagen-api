@@ -64,6 +64,21 @@ const templatesDir = path.join(__dirname, 'templates');
  * sehingga gambar harus diembed sebagai base64.
  */
 async function urlKeBase64(url: string): Promise<string | null> {
+  // Path relatif (misal /uploads/images/logo.png) — baca dari disk langsung
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    try {
+      const filePath = path.join(process.cwd(), url.startsWith('/') ? url.slice(1) : url);
+      const buffer = fs.readFileSync(filePath);
+      const ext = path.extname(url).toLowerCase();
+      const mime = ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg'
+        : ext === '.webp' ? 'image/webp'
+        : 'image/png';
+      return `data:${mime};base64,${buffer.toString('base64')}`;
+    } catch {
+      return null;
+    }
+  }
+  // URL absolut — fetch via HTTP
   return new Promise((resolve) => {
     try {
       const client = url.startsWith('https') ? https : http;

@@ -4,175 +4,194 @@
 <meta charset="UTF-8"/>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #1A1A2E; background: #fff; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; color: #111827; background: #fff; }
 
-  /* Header perusahaan */
-  .header { background: #1A3C6E; padding: 28px 32px; display: flex; justify-content: space-between; align-items: flex-start; color: white; }
-  .header-left h1 { font-size: 22px; font-weight: 700; }
-  .header-left p { font-size: 11px; opacity: 0.8; margin-top: 2px; }
-  .header-logo { height: 44px; max-width: 110px; object-fit: contain; display: block; margin-bottom: 6px; }
+  /* Accent color: Purple */
+  .stripe { height: 4px; background: linear-gradient(90deg, #7C3AED, #A78BFA); }
+
+  /* Header */
+  .header { padding: 22px 36px 18px; display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #E5E7EB; }
+  .header-left .company-name { font-size: 15px; font-weight: 800; color: #111827; letter-spacing: -0.3px; }
+  .header-left .company-info { font-size: 9.5px; color: #6B7280; line-height: 1.8; margin-top: 3px; }
   .header-right { text-align: right; }
-  .doc-label { font-size: 11px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
-  .doc-number { font-size: 18px; font-weight: 700; margin-top: 2px; }
-  .doc-badge { display: inline-block; background: rgba(255,255,255,0.15); padding: 3px 12px; border-radius: 20px; font-size: 11px; margin-top: 6px; }
+  .doc-eyebrow { font-size: 9px; font-weight: 700; color: #7C3AED; text-transform: uppercase; letter-spacing: 1.5px; }
+  .doc-type { font-size: 30px; font-weight: 900; color: #7C3AED; letter-spacing: -1px; line-height: 1.05; margin: 3px 0; }
+  .doc-number { font-size: 11px; font-weight: 600; color: #374151; }
+  .doc-date { font-size: 10px; color: #9CA3AF; margin-top: 2px; }
 
-  .body { padding: 28px 32px; }
+  /* Body */
+  .body { padding: 18px 36px; }
 
-  /* Judul dokumen */
-  .title-box { background: #1A3C6E; border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; color: white; text-align: center; }
-  .title-box h2 { font-size: 15px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
-  .title-box p { font-size: 11px; opacity: 0.75; margin-top: 3px; }
+  /* Title banner */
+  .title-banner { background: #F5F3FF; border: 1px solid #DDD6FE; border-radius: 10px; padding: 14px 20px; margin-bottom: 18px; text-align: center; }
+  .title-banner h2 { font-size: 15px; font-weight: 800; color: #4C1D95; letter-spacing: 0.5px; text-transform: uppercase; }
+  .title-banner p { font-size: 10px; color: #6D28D9; margin-top: 4px; }
 
-  /* Pihak-pihak */
-  .parties { display: flex; gap: 0; margin-bottom: 20px; border: 1px solid #E8E8EE; border-radius: 10px; overflow: hidden; }
+  /* Parties */
+  .parties { display: flex; gap: 0; margin-bottom: 18px; border: 1px solid #E5E7EB; border-radius: 10px; overflow: hidden; }
   .party { flex: 1; padding: 14px 18px; }
-  .party + .party { border-left: 1px solid #E8E8EE; }
-  .party-role { font-size: 10px; font-weight: 700; color: #9898A8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-  .party-name { font-size: 13px; font-weight: 700; color: #1A1A2E; }
-  .party-sub { font-size: 11px; color: #9898A8; margin-top: 3px; line-height: 1.5; }
+  .party + .party { border-left: 1px solid #E5E7EB; }
+  .party-role { font-size: 9px; font-weight: 700; color: #9CA3AF; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .party-name { font-size: 13px; font-weight: 700; color: #111827; }
+  .party-sub { font-size: 10px; color: #6B7280; margin-top: 2px; line-height: 1.6; }
 
-  /* Kotak nominal kasbon */
-  .amount-box { background: #EEF3FB; border-radius: 10px; padding: 20px 24px; margin-bottom: 20px; text-align: center; }
-  .amount-label { font-size: 11px; font-weight: 600; color: #1A3C6E; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
-  .amount-value { font-size: 32px; font-weight: 700; color: #1A3C6E; }
-  .amount-terbilang { font-size: 11px; color: #6B7CA4; margin-top: 6px; font-style: italic; }
+  /* Amount box */
+  .amount-box { background: #F5F3FF; border: 1px solid #DDD6FE; border-radius: 10px; padding: 20px 24px; margin-bottom: 16px; text-align: center; }
+  .amount-label { font-size: 9px; font-weight: 700; color: #6D28D9; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+  .amount-value { font-size: 32px; font-weight: 900; color: #4C1D95; }
+  .amount-terbilang { font-size: 10px; color: #7C3AED; margin-top: 6px; font-style: italic; }
 
-  /* Jatuh tempo / batas pengembalian */
-  .due-box { background: #FFF8EC; border-left: 4px solid #F5A623; border-radius: 0 10px 10px 0; padding: 12px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-  .due-label { font-size: 11px; color: #633806; }
-  .due-date { font-size: 14px; font-weight: 700; color: #633806; }
+  /* Due box */
+  .due-box { border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+  .due-label { font-size: 10px; color: #6B7280; }
+  .due-date { font-size: 14px; font-weight: 700; color: #DC2626; }
 
-  /* Grid info */
-  .info-grid { display: flex; gap: 14px; margin-bottom: 20px; }
-  .info-item { flex: 1; background: #F4F4F8; border-radius: 8px; padding: 10px 14px; }
-  .info-item .label { font-size: 10px; font-weight: 600; color: #9898A8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
-  .info-item .value { font-size: 12px; font-weight: 600; color: #1A1A2E; }
+  /* Info grid */
+  .info-grid { display: flex; gap: 12px; margin-bottom: 16px; }
+  .info-item { flex: 1; background: #F9FAFB; border-radius: 8px; padding: 10px 14px; }
+  .info-item .ilabel { font-size: 9px; font-weight: 700; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+  .info-item .ivalue { font-size: 12px; font-weight: 700; color: #111827; }
 
-  /* Keperluan / catatan */
-  .notes-box { background: #F4F4F8; border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
-  .notes-title { font-size: 10px; font-weight: 600; color: #9898A8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
-  .notes-text { font-size: 11px; color: #1A1A2E; line-height: 1.7; white-space: pre-wrap; }
+  /* Notes / keperluan */
+  .notes-box { border-left: 3px solid #7C3AED; padding: 10px 14px; margin-bottom: 16px; }
+  .notes-title { font-size: 9px; font-weight: 700; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .notes-text { font-size: 10px; color: #374151; line-height: 1.6; white-space: pre-wrap; }
 
-  /* Syarat & ketentuan */
-  .terms-box { background: #F4F4F8; border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
-  .terms-title { font-size: 10px; font-weight: 600; color: #9898A8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
-  .terms-text { font-size: 11px; color: #1A1A2E; line-height: 1.7; white-space: pre-wrap; }
+  /* Terms */
+  .terms-box { background: #F9FAFB; border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; }
+  .terms-title { font-size: 9px; font-weight: 700; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .terms-text { font-size: 10px; color: #374151; line-height: 1.7; white-space: pre-wrap; }
 
-  /* Tanda tangan 2 pihak */
-  .sign-section { display: flex; justify-content: space-between; margin-top: 24px; margin-bottom: 8px; }
-  .sign-box { width: 200px; text-align: center; }
-  .sign-role { font-size: 10px; font-weight: 600; color: #9898A8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
-  .sign-area { position: relative; height: 90px; display: flex; align-items: center; justify-content: center; }
-  .sign-line { border-top: 1px solid #1A1A2E; padding-top: 6px; font-size: 11px; font-weight: 600; color: #1A1A2E; }
-  .sign-sub { font-size: 10px; color: #9898A8; margin-top: 2px; }
+  /* Signatures */
+  .sign-section { display: flex; justify-content: space-between; margin-top: 8px; }
+  .sign-box { width: 195px; text-align: center; }
+  .sign-role { font-size: 9px; font-weight: 700; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .sign-area { position: relative; height: 80px; display: flex; align-items: center; justify-content: center; }
+  .sign-name { border-top: 1px solid #374151; padding-top: 5px; font-size: 11px; font-weight: 700; color: #111827; }
+  .sign-sub { font-size: 9px; color: #6B7280; margin-top: 2px; }
 
   /* Footer */
-  .footer { background: #F4F4F8; padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
-  .footer-text { font-size: 10px; color: #9898A8; }
+  .footer { margin-top: 18px; border-top: 1px solid #E5E7EB; padding: 11px 36px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-brand { font-size: 9.5px; font-weight: 700; color: #7C3AED; }
+  .footer-info { font-size: 9px; color: #9CA3AF; text-align: right; }
 </style>
 </head>
 <body>
-  <!-- Header perusahaan -->
-  <div class="header">
-    <div class="header-left">
-      {{LOGO_IMG}}
-      <h1>{{PERUSAHAAN_NAMA}}</h1>
-      <p>{{PERUSAHAAN_ALAMAT}}, {{PERUSAHAAN_KOTA}}</p>
-      <p>{{PERUSAHAAN_TELP}} &nbsp;·&nbsp; {{PERUSAHAAN_EMAIL}}</p>
+<div class="stripe"></div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    {{LOGO_IMG}}
+    <div class="company-name">{{PERUSAHAAN_NAMA}}</div>
+    <div class="company-info">
+      {{PERUSAHAAN_ALAMAT}}<br>
+      {{PERUSAHAAN_KOTA}}<br>
+      {{PERUSAHAAN_TELP}} &nbsp;·&nbsp; {{PERUSAHAAN_EMAIL}}
     </div>
-    <div class="header-right">
-      <div class="doc-label">Bukti Kasbon</div>
-      <div class="doc-number">{{NOMOR}}</div>
-      <div class="doc-badge">{{TANGGAL}}</div>
+  </div>
+  <div class="header-right">
+    <div class="doc-eyebrow">Pinjaman Sementara</div>
+    <div class="doc-type">KASBON</div>
+    <div class="doc-number">{{NOMOR}}</div>
+    <div class="doc-date">{{TANGGAL}}</div>
+  </div>
+</div>
+
+<!-- Body -->
+<div class="body">
+
+  <!-- Title banner -->
+  <div class="title-banner">
+    <h2>Bukti Kasbon / Pinjaman Sementara</h2>
+    <p>Dokumen ini merupakan bukti sah pemberian kasbon kepada penerima</p>
+  </div>
+
+  <!-- Parties -->
+  <div class="parties">
+    <div class="party">
+      <div class="party-role">Pemberi Kasbon</div>
+      <div class="party-name">{{PERUSAHAAN_NAMA}}</div>
+      <div class="party-sub">{{PERUSAHAAN_ALAMAT}}, {{PERUSAHAAN_KOTA}}</div>
+      <div class="party-sub">{{PERUSAHAAN_TELP}} &nbsp;·&nbsp; {{PERUSAHAAN_EMAIL}}</div>
+    </div>
+    <div class="party">
+      <div class="party-role">Penerima Kasbon</div>
+      <div class="party-name">{{KLIEN_NAMA}}</div>
+      <div class="party-sub">{{KLIEN_ALAMAT}}</div>
+      <div class="party-sub">{{KLIEN_TELP}} &nbsp;·&nbsp; {{KLIEN_EMAIL}}</div>
     </div>
   </div>
 
-  <div class="body">
-    <!-- Judul -->
-    <div class="title-box">
-      <h2>Bukti Kasbon / Pinjaman Sementara</h2>
-      <p>Dokumen ini merupakan bukti sah pemberian kasbon kepada penerima</p>
-    </div>
+  <!-- Amount -->
+  <div class="amount-box">
+    <div class="amount-label">Jumlah Kasbon</div>
+    <div class="amount-value">{{TOTAL}}</div>
+    <div class="amount-terbilang"><em>{{TERBILANG}}</em></div>
+  </div>
 
-    <!-- Pihak pemberi dan penerima -->
-    <div class="parties">
-      <div class="party">
-        <div class="party-role">Pemberi Kasbon</div>
-        <div class="party-name">{{PERUSAHAAN_NAMA}}</div>
-        <div class="party-sub">{{PERUSAHAAN_ALAMAT}}, {{PERUSAHAAN_KOTA}}</div>
-        <div class="party-sub">{{PERUSAHAAN_TELP}} &nbsp;·&nbsp; {{PERUSAHAAN_EMAIL}}</div>
-      </div>
-      <div class="party">
-        <div class="party-role">Penerima Kasbon</div>
-        <div class="party-name">{{KLIEN_NAMA}}</div>
-        <div class="party-sub">{{KLIEN_ALAMAT}}</div>
-        <div class="party-sub">{{KLIEN_TELP}} &nbsp;·&nbsp; {{KLIEN_EMAIL}}</div>
-      </div>
-    </div>
+  <!-- Due date -->
+  <div class="due-box">
+    <div class="due-label">Batas Pengembalian</div>
+    <div class="due-date">{{JATUH_TEMPO}}</div>
+  </div>
 
-    <!-- Nominal kasbon (utama) -->
-    <div class="amount-box">
-      <div class="amount-label">Jumlah Kasbon</div>
-      <div class="amount-value">{{TOTAL}}</div>
+  <!-- Info grid -->
+  <div class="info-grid">
+    <div class="info-item">
+      <div class="ilabel">Nomor Dokumen</div>
+      <div class="ivalue">{{NOMOR}}</div>
     </div>
-
-    <!-- Batas pengembalian -->
-    <div class="due-box">
-      <div class="due-label">Batas Pengembalian</div>
-      <div class="due-date">{{JATUH_TEMPO}}</div>
+    <div class="info-item">
+      <div class="ilabel">Tanggal Dikeluarkan</div>
+      <div class="ivalue">{{TANGGAL}}</div>
     </div>
-
-    <!-- Info grid -->
-    <div class="info-grid">
-      <div class="info-item">
-        <div class="label">Nomor Dokumen</div>
-        <div class="value">{{NOMOR}}</div>
-      </div>
-      <div class="info-item">
-        <div class="label">Tanggal Dikeluarkan</div>
-        <div class="value">{{TANGGAL}}</div>
-      </div>
-      <div class="info-item">
-        <div class="label">Status</div>
-        <div class="value">Aktif</div>
-      </div>
-    </div>
-
-    <!-- Keperluan / catatan -->
-    <div class="notes-box">
-      <div class="notes-title">Keperluan / Keterangan</div>
-      <div class="notes-text">{{CATATAN}}</div>
-    </div>
-
-    <!-- Syarat & ketentuan -->
-    <div class="terms-box">
-      <div class="terms-title">Syarat &amp; Ketentuan</div>
-      <div class="terms-text">{{SYARAT_KETENTUAN}}</div>
-    </div>
-
-    <!-- Tanda tangan 2 pihak -->
-    <div class="sign-section">
-      <div class="sign-box">
-        <div class="sign-role">Pemberi Kasbon</div>
-        <div class="sign-area">
-          {{TTD_IMG}}
-          {{STEMPEL_IMG}}
-        </div>
-        <div class="sign-line">{{NAMA_DIREKTUR}}</div>
-        <div class="sign-sub">{{JABATAN_DIREKTUR}}</div>
-      </div>
-      <div class="sign-box">
-        <div class="sign-role">Penerima Kasbon</div>
-        <div style="height:90px;"></div>
-        <div class="sign-line">{{KLIEN_NAMA}}</div>
-        <div class="sign-sub">Penerima</div>
-      </div>
+    <div class="info-item">
+      <div class="ilabel">Status</div>
+      <div class="ivalue">Aktif</div>
     </div>
   </div>
 
-  <div class="footer">
-    <div class="footer-text">{{NOMOR}} &nbsp;·&nbsp; DokaGen</div>
-    <div class="footer-text">Diterbitkan: {{TANGGAL}}</div>
+  <!-- Notes -->
+  <div class="notes-box">
+    <div class="notes-title">Keperluan / Keterangan</div>
+    <div class="notes-text">{{CATATAN}}</div>
   </div>
+
+  <!-- Terms -->
+  <div class="terms-box">
+    <div class="terms-title">Syarat &amp; Ketentuan</div>
+    <div class="terms-text">{{SYARAT_KETENTUAN}}</div>
+  </div>
+
+  <!-- Signatures -->
+  <div class="sign-section">
+    <div class="sign-box">
+      <div class="sign-role">Pemberi Kasbon</div>
+      <div class="sign-area">
+        {{TTD_IMG}}
+        {{STEMPEL_IMG}}
+      </div>
+      <div class="sign-name">{{NAMA_DIREKTUR}}</div>
+      <div class="sign-sub">{{JABATAN_DIREKTUR}}</div>
+    </div>
+    <div class="sign-box">
+      <div class="sign-role">Penerima Kasbon</div>
+      <div style="height:80px;"></div>
+      <div class="sign-name">{{KLIEN_NAMA}}</div>
+      <div class="sign-sub">Penerima</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div>
+    <div class="footer-brand">{{PERUSAHAAN_NAMA}}</div>
+    <div style="font-size:9px;color:#9CA3AF;">{{NOMOR}} &nbsp;·&nbsp; Diterbitkan: {{TANGGAL}}</div>
+  </div>
+  <div class="footer-info">{{PERUSAHAAN_TELP}} &nbsp;·&nbsp; {{PERUSAHAAN_EMAIL}}</div>
+</div>
 </body>
 </html>
