@@ -12,16 +12,23 @@ export async function getBranding() {
   return perusahaan ?? { nama: 'DokaGen', logoUrl: null };
 }
 
-export async function getByUserId(userId: string) {
-  const perusahaan = await prisma.perusahaan.findFirst({ where: { userId } });
+// Cari perusahaan: owner (userId) atau sub-user (perusahaanId dari JWT)
+function findPerusahaan(userId: string, perusahaanId?: string) {
+  return prisma.perusahaan.findFirst({
+    where: perusahaanId ? { id: perusahaanId } : { userId },
+  });
+}
+
+export async function getByUserId(userId: string, perusahaanId?: string) {
+  const perusahaan = await findPerusahaan(userId, perusahaanId);
   if (!perusahaan) {
     throw Object.assign(new Error('Data perusahaan tidak ditemukan'), { statusCode: 404 });
   }
   return perusahaan;
 }
 
-export async function update(userId: string, data: UpdatePerusahaanInput) {
-  const existing = await prisma.perusahaan.findFirst({ where: { userId } });
+export async function update(userId: string, data: UpdatePerusahaanInput, perusahaanId?: string) {
+  const existing = await findPerusahaan(userId, perusahaanId);
   if (!existing) {
     throw Object.assign(new Error('Data perusahaan tidak ditemukan'), { statusCode: 404 });
   }
@@ -31,8 +38,8 @@ export async function update(userId: string, data: UpdatePerusahaanInput) {
   });
 }
 
-export async function updateLogoUrl(userId: string, logoUrl: string) {
-  const existing = await prisma.perusahaan.findFirst({ where: { userId } });
+export async function updateLogoUrl(userId: string, logoUrl: string, perusahaanId?: string) {
+  const existing = await findPerusahaan(userId, perusahaanId);
   if (!existing) {
     throw Object.assign(new Error('Data perusahaan tidak ditemukan'), { statusCode: 404 });
   }
@@ -42,8 +49,8 @@ export async function updateLogoUrl(userId: string, logoUrl: string) {
   });
 }
 
-export async function updateStempelUrl(userId: string, stempelUrl: string) {
-  const existing = await prisma.perusahaan.findFirst({ where: { userId } });
+export async function updateStempelUrl(userId: string, stempelUrl: string, perusahaanId?: string) {
+  const existing = await findPerusahaan(userId, perusahaanId);
   if (!existing) {
     throw Object.assign(new Error('Data perusahaan tidak ditemukan'), { statusCode: 404 });
   }
@@ -53,8 +60,8 @@ export async function updateStempelUrl(userId: string, stempelUrl: string) {
   });
 }
 
-export async function updateTtdUrl(userId: string, ttdUrl: string) {
-  const existing = await prisma.perusahaan.findFirst({ where: { userId } });
+export async function updateTtdUrl(userId: string, ttdUrl: string, perusahaanId?: string) {
+  const existing = await findPerusahaan(userId, perusahaanId);
   if (!existing) {
     throw Object.assign(new Error('Data perusahaan tidak ditemukan'), { statusCode: 404 });
   }
