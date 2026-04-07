@@ -2,6 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 import * as perusahaanService from './perusahaan.service';
 import { sendSuccess } from '../../utils/response';
 
+export async function getBranding(_req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const data = await perusahaanService.getBranding();
+    sendSuccess(res, data);
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function getMe(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const data = await perusahaanService.getByUserId(req.user!.userId);

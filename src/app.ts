@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
@@ -17,13 +16,14 @@ import usersRoutes from './modules/users/users.routes';
 
 const app = express();
 
+// Trust nginx reverse proxy — diperlukan agar express-rate-limit
+// bisa baca X-Forwarded-For dengan benar
+app.set('trust proxy', 1);
+
 // ─── Security & Middleware ──────────────────────────────────────────────────
 app.use(helmet());
 app.use(compression());
-app.use(cors({
-  origin: process.env.CLIENT_URL ?? 'http://localhost:3000',
-  credentials: true,
-}));
+// CORS ditangani oleh Nginx reverse proxy — tidak perlu di Express
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 

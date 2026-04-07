@@ -30,6 +30,9 @@ const upload = multer({
   },
 });
 
+// GET  /api/perusahaan/branding — public, tanpa auth
+router.get('/branding', ctrl.getBranding);
+
 router.use(authenticate);
 
 // GET  /api/perusahaan/me

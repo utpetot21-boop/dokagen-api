@@ -3,6 +3,15 @@ import type { UpdatePerusahaanInput } from './perusahaan.schema';
 
 const prisma = new PrismaClient();
 
+// Public — tidak perlu auth, untuk ditampilkan di login screen mobile
+export async function getBranding() {
+  const perusahaan = await prisma.perusahaan.findFirst({
+    select: { nama: true, logoUrl: true },
+    orderBy: { createdAt: 'asc' },
+  });
+  return perusahaan ?? { nama: 'DokaGen', logoUrl: null };
+}
+
 export async function getByUserId(userId: string) {
   const perusahaan = await prisma.perusahaan.findFirst({ where: { userId } });
   if (!perusahaan) {
